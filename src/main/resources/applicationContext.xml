@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+        default-lazy-init="true">
+
+    <description>Spring公共配置</description>
+
+    <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+    <context:component-scan base-package="com.*">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <context:component-scan base-package="com.*"/>
+
+    <!-- 引用各模块的spring配置文件 -->
+<!--     <import resource="applicationContext-mq.xml"/> -->
+	<import resource="dubbo.xml"/>
+    <!-- production环境 -->
+    <beans profile="product">
+        <bean id="propertyConfigurer"  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="locations">
+                <list>
+                    <value>classpath:properties/application.product.properties</value>
+                </list>
+            </property>
+        </bean>
+        
+        <!-- redis config -->
+        <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+            <property name="maxIdle" value="${redis.maxIdle}"/>
+            <property name="maxTotal" value="${redis.maxActive}"/>
+            <property name="maxWaitMillis" value="${redis.maxWait}"/>
+            <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        </bean>
+
+        <bean id="jedisConnectionFactory"
+              class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+            <constructor-arg index="0" ref="jedisPoolConfig"/>
+            <property name="hostName" value="${redis.host}"/>
+            <property name="port" value="${redis.port}"/>
+            <property name="timeout" value="${redis.timeout}"/>
+        </bean>
+
+        <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+            <constructor-arg index="0" ref="jedisConnectionFactory"/>
+        </bean>
+        
+    </beans>
+
+    <!-- local development环境 -->
+    <beans profile="local">
+        <bean id="propertyConfigurer"  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="locations">
+                <list>
+                    <value>classpath:properties/application.local.properties</value>
+                </list>
+            </property>
+        </bean>
+
+        <!-- redis config -->
+        <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+            <property name="maxIdle" value="${redis.maxIdle}"/>
+            <property name="maxTotal" value="${redis.maxActive}"/>
+            <property name="maxWaitMillis" value="${redis.maxWait}"/>
+            <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        </bean>
+
+        <bean id="jedisConnectionFactory"
+              class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+            <constructor-arg index="0" ref="jedisPoolConfig"/>
+            <property name="hostName" value="${redis.host}"/>
+            <property name="port" value="${redis.port}"/>
+            <property name="timeout" value="${redis.timeout}"/>
+        </bean>
+
+        <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+            <constructor-arg index="0" ref="jedisConnectionFactory"/>
+        </bean>
+    </beans>
+
+    <!-- test环境 -->
+    <beans profile="test">
+        <bean id="propertyConfigurer"  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="locations">
+                <list>
+                    <value>classpath:properties/application.test.properties</value>
+                </list>
+            </property>
+        </bean>
+        <!-- redis config -->
+        <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+            <property name="maxIdle" value="${redis.maxIdle}"/>
+            <property name="maxTotal" value="${redis.maxActive}"/>
+            <property name="maxWaitMillis" value="${redis.maxWait}"/>
+            <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        </bean>
+        <bean id="jedisConnectionFactory"
+              class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+            <constructor-arg index="0" ref="jedisPoolConfig"/>
+            <property name="hostName" value="${redis.host}"/>
+            <property name="port" value="${redis.port}"/>
+            <property name="timeout" value="${redis.timeout}"/>
+        </bean>
+        <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+            <constructor-arg index="0" ref="jedisConnectionFactory"/>
+        </bean>
+    </beans>
+
+    <beans>
+        <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+            <property name="maxUploadSize" value="104857600" />
+            <property name="maxInMemorySize" value="4096" />
+            <property name="defaultEncoding" value="UTF-8"/>
+        </bean>
+    </beans>
+
+</beans>

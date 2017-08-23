@@ -1,0 +1,52 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+           http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<rabbit:connection-factory id="connectionFactory"
+		host="${rabbitmq.host}" username="${rabbitmq.username}" password="${rabbitmq.password}"
+		port="${rabbitmq.port}" />
+
+	<rabbit:admin id="containerAdmin" connection-factory="connectionFactory"
+		auto-startup="true" />
+
+	<bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg ref="connectionFactory"></constructor-arg>
+    </bean>
+
+    <rabbit:queue id="testQueue" name="testQueue"/>
+
+    <rabbit:topic-exchange name="testExchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="testQueue" pattern="test.*"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+
+    <!-- 声明消息转换器为SimpleMessageConverter -->
+    <bean id="messageConverter" class="org.springframework.amqp.support.converter.SimpleMessageConverter"/>
+
+    <!-- 用于接收消息的处理类 -->
+   <!--  <bean id="dataMessageHandler" class="com.rhjf.acount.web.mq.TestMessageHandler"/>
+ -->
+    <!-- 用于消息的监听的代理类MessageListenerAdapter -->
+    <!-- <bean id="dataMessagelistenerAdapter"
+          class="org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter">
+        <constructor-arg ref="dataMessageHandler"/>
+        <property name="defaultListenerMethod" value="handleMessage"></property>
+        <property name="messageConverter" ref="messageConverter"></property>
+    </bean> -->
+
+    <!-- <bean id="dataMessagelistenerContainer"
+          class="org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer">
+        <property name="queues" value="testQueue"></property>
+        <property name="connectionFactory" ref="connectionFactory"></property>
+        <property name="messageListener" ref="dataMessagelistenerAdapter"></property>
+        <property name="acknowledgeMode" value="AUTO"></property>
+        <property name="concurrentConsumers" value="1"></property>
+        <property name="maxConcurrentConsumers" value="1"></property>
+    </bean> -->
+
+
+</beans>
