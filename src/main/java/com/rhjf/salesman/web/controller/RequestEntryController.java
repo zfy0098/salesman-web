@@ -61,6 +61,10 @@ public class RequestEntryController {
 				sbf.append(request.getHeader(key));
 				sbf.append("&");
 			}
+
+			sbf.append("ip=");
+			sbf.append(UtilsConstant.getRequestIP(request));
+
 			hearLog.trace(sbf.toString());
 
 			if(UtilsConstant.strIsEmpty(data)){
