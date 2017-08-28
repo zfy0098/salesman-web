@@ -3,12 +3,12 @@ package com.rhjf.salesman.web.util;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+
 /**
  * Created by hadoop on 2017/8/18.
  */
 
-
-final public class ApplicationContextUtil {
+public class ApplicationContextUtil {
     /**
      * 由于applicationContext.xml 的唯一性,在这里可以把它写成单例模式
      */

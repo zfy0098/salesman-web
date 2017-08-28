@@ -34,7 +34,6 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-
     </appender>
 
     <appender name="hearAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -47,7 +46,6 @@
         </encoder>
     </appender>
 
-
     <logger name="com.rhjf.salesman.web.controller" >
         <level value="trace"/>
         <level value="trace"/>
@@ -59,9 +57,6 @@
         <level value="trace"/>
         <appender-ref ref="hearAppender"/>
     </logger>
-
-
-
 
     <!-- project default level -->
     <logger name="guoer_appserv" level="INFO"/>

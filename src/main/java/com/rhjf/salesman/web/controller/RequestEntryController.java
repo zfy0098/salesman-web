@@ -1,34 +1,33 @@
 package com.rhjf.salesman.web.controller;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.rhjf.salesman.core.constants.Constants;
-import com.rhjf.salesman.web.util.ApplicationContextUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.rhjf.account.modle.domain.salesman.LoginUser;
 import com.rhjf.account.modle.domain.salesman.ParamterData;
 import com.rhjf.account.modle.domain.salesman.TermKey;
+import com.rhjf.salesman.core.constants.Constants;
 import com.rhjf.salesman.core.constants.RespCode;
 import com.rhjf.salesman.core.service.LoginService;
 import com.rhjf.salesman.core.util.DESUtil;
 import com.rhjf.salesman.core.util.PropertyUtils;
 import com.rhjf.salesman.core.util.UtilsConstant;
-
+import com.rhjf.salesman.web.util.ApplicationContextUtil;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *    客户端接口访问入口
@@ -49,6 +48,9 @@ public class RequestEntryController {
 
 	@RequestMapping(value = "" , method = RequestMethod.POST)
 	public Object RequestEntry(@RequestParam(value = "data" , required = true) String data , HttpServletRequest request){
+
+
+		ParamterData  paramter = null;
 
 		try {
 
@@ -78,7 +80,7 @@ public class RequestEntryController {
 
 			JSONObject json = JSONObject.fromObject(data);
 			Map<String,Object> map = UtilsConstant.jsonToMap(json);
-			ParamterData  paramter = UtilsConstant.mapToBean(map, ParamterData.class);
+			paramter = UtilsConstant.mapToBean(map, ParamterData.class);
 
 			/** 发送时间  **/
 			if(UtilsConstant.strIsEmpty(paramter.getSendTime())){
@@ -136,7 +138,8 @@ public class RequestEntryController {
 			/** 是否需要mac **/
 			String needmac = trade.split(",")[3];
 			
-			AbstractApplicationContext applicationContext = ApplicationContextUtil.getApplicationContext();
+
+			ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
 
 			LoginUser user = null;
 
@@ -155,7 +158,7 @@ public class RequestEntryController {
 					paramter.setRespDesc(RespCode.userDoesNotExist[1]);
 				}else{
 
-					if(!"A001".equals(Txndir)){
+					if(!"A001".equals(Txndir)&&!"A004".equals(Txndir)){
 						if(!paramter.getTerminalInfo().equals(user.getLoginPSN())){
 							log.info(user.getLoginID() + "被其他设备登录 , 终端上传: " + paramter.getTerminalInfo() + ",数据库保存" +user.getLoginPSN() );
 							paramter.setRespCode(RespCode.LOGINError[0]);
@@ -206,14 +209,16 @@ public class RequestEntryController {
 				paramter.setMac(mac);
 			}
 
-//			applicationContext.close();
-			Object obj = paraFilterReturn(paramter);
-			log.info("响应报文：" + obj.toString());
-			return obj;
 		} catch (Exception e) {
 			log.error("请求异常"  , e);
+			paramter.setRespDesc(RespCode.NETWORKError[0]);
+			paramter.setRespDesc(RespCode.NETWORKError[1]);
 		}
-		return null;
+
+		Object obj = paraFilterReturn(paramter);
+		log.info("响应报文：" + obj.toString());
+
+		return obj;
 	}
 	
 	
