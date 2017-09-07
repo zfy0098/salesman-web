@@ -11,7 +11,7 @@
     </context-param>
     <context-param>
         <param-name>spring.profiles.active</param-name>
-        <param-value>local</param-value>
+        <param-value>product</param-value>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -37,12 +37,6 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <servlet>
-        <servlet-name>ApplicationContext</servlet-name>
-        <servlet-class>com.rhjf.salesman.web.util.ApplicationContextUtil</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
 
     <servlet>
         <servlet-name>springServlet</servlet-name>

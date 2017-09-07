@@ -9,19 +9,16 @@ import com.rhjf.salesman.core.service.LoginService;
 import com.rhjf.salesman.core.util.DESUtil;
 import com.rhjf.salesman.core.util.PropertyUtils;
 import com.rhjf.salesman.core.util.UtilsConstant;
-import com.rhjf.salesman.web.util.ApplicationContextUtil;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -43,14 +40,12 @@ public class RequestEntryController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
-
 	private Logger hearLog = LoggerFactory.getLogger("hearAppender");
 
 	@RequestMapping(value = "" , method = RequestMethod.POST)
 	public Object RequestEntry(@RequestParam(value = "data" , required = true) String data , HttpServletRequest request){
 
-
-		ParamterData  paramter = null;
+		ParamterData paramter = null;
 
 		try {
 
@@ -172,10 +167,7 @@ public class RequestEntryController {
 						/** 需要校验mac **/
 						//  获取用户秘钥信息
 						TermKey termkey = loginService.userTermkey(user.getID());
-
 						mackey = termkey.getMacKey();
-
-
 
  						String mac = makeMac( mackey , JSONObject.fromObject(data), user);
  						if(!mac.equals(paramter.getMac())){

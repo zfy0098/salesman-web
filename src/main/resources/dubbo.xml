@@ -9,28 +9,30 @@
 <!--  消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
     <dubbo:application name="salesman-web"/>
 
-    <!--  <dubbo:registry address="zookeeper://101.200.188.172:2181"/>-->
-    <!-- <dubbo:registry address="zookeeper://10.10.20.104:2181"/>-->
 
     <!-- 使用zookeeper注册中心暴露服务地址 -->
-<!--   <dubbo:registry  address="zookeeper://10.10.20.104:2181"/>
-    <dubbo:protocol name="dubbo" port="20881" />-->
-
     <dubbo:registry address="${zookeeper.ip}"/>
     <dubbo:protocol name="dubbo"  port="${dubbo.port}" />
 
+    <!--  用户功能 -->
     <dubbo:reference id="loginService" interface="com.rhjf.salesman.core.service.LoginService" timeout="10000"  version="1.0"/>
 
+    <!--  业务员信息功能 -->
     <dubbo:reference id="salesManService" interface="com.rhjf.salesman.core.service.SalesManService" timeout="10000" version="1.0"/>
 
+    <!--  业务员收益功能 -->
     <dubbo:reference id="salesManProfitService" interface="com.rhjf.salesman.core.service.SalesManProfitService" timeout="10000" version="1.0"/>
 
+    <!--  公告功能 -->
     <dubbo:reference id="salesManBulletinService" interface="com.rhjf.salesman.core.service.SalesManBulletinService"  timeout="10000" version="1.0"/>
 
+    <!--  首页广告 -->
     <dubbo:reference id="salesManADListService" interface="com.rhjf.salesman.core.service.SalesManADListService" timeout="10000" version="1.0" />
 
+    <!--  登录后返回信息 -->
     <dubbo:reference id="indexService" interface="com.rhjf.salesman.core.service.IndexService" timeout="10000" version="1.0" />
 
+    <!-- 信用卡功能 -->
     <dubbo:reference id="creaditCardService" interface="com.rhjf.salesman.core.service.CreaditCardService" timeout="10000" version="1.0" />
 
     <!--  银行卡信息 　-->
@@ -39,12 +41,17 @@
     <!-- 商户功能 -->
     <dubbo:reference id="merchantService" interface="com.rhjf.salesman.core.service.MerchantService" timeout="10000" version="1.0" />
 
+    <!-- 验证码功能 -->
     <dubbo:reference id="smsApplyService" interface="com.rhjf.salesman.core.service.SmsApplyService" timeout="10000"  version="1.0" />
 
+    <!-- 测试接口 -->
     <dubbo:reference id="testService" interface="com.rhjf.salesman.core.service.TestService" timeout="10000" version="1.0" />
 
-    <!--  固定码接口 -->
+    <!--  固定码功能 -->
     <dubbo:reference id="QRCodeService" interface="com.rhjf.salesman.core.service.QRCodeService"  timeout="10000"  version="1.0" />
+
+    <!--  提现功能 -->
+    <dubbo:reference id="withdrawService" interface="com.rhjf.salesman.core.service.WithdrawService" timeout="10000" version="1.0" />
 
 </beans>
 
