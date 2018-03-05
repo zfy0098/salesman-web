@@ -53,6 +53,9 @@
     <!--  提现功能 -->
     <dubbo:reference id="withdrawService" interface="com.rhjf.salesman.core.service.WithdrawService" timeout="10000" version="1.0" />
 
+
+    <!--  推广图片接口 -->
+    <dubbo:reference id="popularizeService" interface="com.rhjf.salesman.core.service.PopularizeService" timeout="10000" version="1.0"/>
 </beans>
 
 

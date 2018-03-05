@@ -37,7 +37,7 @@
     </appender>
 
     <appender name="hearAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/alidata1/log/salesman/head.log</file>
+        <file>/alidata1/app/log/salesman/head.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/alidata1/log/salesman/head-%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>

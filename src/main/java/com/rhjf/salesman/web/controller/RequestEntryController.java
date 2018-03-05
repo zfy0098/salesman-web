@@ -43,7 +43,7 @@ public class RequestEntryController {
 	private Logger hearLog = LoggerFactory.getLogger("hearAppender");
 
 	@RequestMapping(value = "" , method = RequestMethod.POST)
-	public Object RequestEntry(@RequestParam(value = "data" , required = true) String data , HttpServletRequest request){
+	public Object RequestEntry(@RequestParam(value = "data") String data , HttpServletRequest request){
 
 		ParamterData paramter = null;
 
@@ -143,7 +143,23 @@ public class RequestEntryController {
 			/** 是否需要登录信息  **/
 			if("1".equals(needLogin)){
 				/** 获取登录信息  **/
+
+
+				if(applicationContext == null){
+					log.info("applicationContext is null");
+				}else{
+					log.info("applicationContext  不是空的 ");
+				}
+
 				LoginService loginService = applicationContext.getBean("loginService" , LoginService.class);
+
+				if(loginService == null){
+					log.info("loginService is null");
+				}else{
+					log.info("loginService ------------------  不是空的");
+				}
+
+
 				user = loginService.userInfo(paramter.getLoginID());
 				if(user == null){
 
@@ -153,7 +169,7 @@ public class RequestEntryController {
 					paramter.setRespDesc(RespCode.userDoesNotExist[1]);
 				}else{
 
-					if(!"A001".equals(Txndir)&&!"A004".equals(Txndir)){
+					if(!Txndir.startsWith("A")&&!Txndir.equals("C")){
 						if(!paramter.getTerminalInfo().equals(user.getLoginPSN())){
 							log.info(user.getLoginID() + "被其他设备登录 , 终端上传: " + paramter.getTerminalInfo() + ",数据库保存" +user.getLoginPSN() );
 							paramter.setRespCode(RespCode.LOGINError[0]);

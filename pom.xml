@@ -98,10 +98,10 @@
 				<version>${jetty.version}</version>
 				<configuration>
 					<httpConnector>
-						<port>8088</port>
+						<port>9090</port>
 					</httpConnector>
 					<webAppConfig>
-						<contextPath>/</contextPath>
+						<contextPath>/salesman-web</contextPath>
 					</webAppConfig>
 				</configuration>
 			</plugin>	
